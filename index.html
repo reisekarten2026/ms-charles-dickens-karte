@@ -8,7 +8,7 @@
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <title>MS Charles Dickens – Reisekarte</title>
+  <title>MS Charles Dickens – Interaktive Reisekarte</title>
 
   <link
 
@@ -26,6 +26,8 @@
 
       margin: 0;
 
+      font-family: Arial, sans-serif;
+
     }
 
     #map {
@@ -33,6 +35,50 @@
       width: 100%;
 
       height: 100%;
+
+    }
+
+    .number-marker {
+
+      background: #173f6b;
+
+      color: white;
+
+      border: 2px solid white;
+
+      border-radius: 50%;
+
+      width: 30px;
+
+      height: 30px;
+
+      text-align: center;
+
+      line-height: 30px;
+
+      font-weight: bold;
+
+      font-size: 14px;
+
+      box-shadow: 0 2px 5px rgba(0,0,0,0.4);
+
+    }
+
+    .popup-title {
+
+      font-size: 18px;
+
+      font-weight: bold;
+
+      color: #173f6b;
+
+    }
+
+    .popup-subtitle {
+
+      margin-top: 5px;
+
+      color: #555;
 
     }
 
@@ -48,77 +94,239 @@
 
 <script>
 
-  // Karte erstellen
+const map = L.map('map');
 
-  const map = L.map('map').setView([50.2, 10.5], 6);
+L.tileLayer(
 
-  // OpenStreetMap laden
+  'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
 
-  L.tileLayer(
+  {
 
-    'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+    maxZoom: 19,
 
-    {
+    attribution: '&copy; OpenStreetMap'
 
-      maxZoom: 19,
+  }
 
-      attribution: '&copy; OpenStreetMap'
+).addTo(map);
 
-    }
+const stops = [
 
-  ).addTo(map);
+  {
 
-  // Amsterdam
+    number: 1,
 
-  const amsterdam = [52.3676, 4.9041];
+    name: "Amsterdam",
 
-  L.marker(amsterdam)
+    description: "Einschiffung & Grachten",
 
-    .addTo(map)
+    coords: [52.3676, 4.9041]
 
-    .bindPopup(
+  },
 
-      '<b>⚓ Amsterdam</b><br>Start der Reise mit der MS Charles Dickens'
+  {
 
-    );
+    number: 2,
 
-  // Wien
+    name: "Köln",
 
-  const wien = [48.2082, 16.3738];
+    description: "Domstadt am Rhein",
 
-  L.marker(wien)
+    coords: [50.9375, 6.9603]
 
-    .addTo(map)
+  },
 
-    .bindPopup(
+  {
 
-      '<b>🏛️ Wien</b><br>Ziel der Reise'
+    number: 3,
 
-    );
+    name: "Oberes Mittelrheintal",
 
-  // Verbindungslinie
+    description: "Romantische Rheinlandschaft",
 
-  const route = L.polyline(
+    coords: [50.1840, 7.6940]
 
-    [amsterdam, wien],
+  },
 
-    {
+  {
 
-      color: '#176fbd',
+    number: 4,
 
-      weight: 4
+    name: "Rüdesheim",
 
-    }
+    description: "Weinort am Rhein",
 
-  ).addTo(map);
+    coords: [49.9780, 7.9230]
 
-  // Karte automatisch passend ausrichten
+  },
 
-  map.fitBounds(route.getBounds(), {
+  {
 
-    padding: [50, 50]
+    number: 5,
+
+    name: "Miltenberg",
+
+    description: "Malerische Fachwerkstadt",
+
+    coords: [49.7045, 9.2670]
+
+  },
+
+  {
+
+    number: 6,
+
+    name: "Würzburg",
+
+    description: "Residenzstadt am Main",
+
+    coords: [49.7913, 9.9534]
+
+  },
+
+  {
+
+    number: 7,
+
+    name: "Bamberg",
+
+    description: "UNESCO-Welterbe",
+
+    coords: [49.8917, 10.8870]
+
+  },
+
+  {
+
+    number: 8,
+
+    name: "Nürnberg",
+
+    description: "Kaiserburg & Altstadt",
+
+    coords: [49.4521, 11.0767]
+
+  },
+
+  {
+
+    number: 9,
+
+    name: "Regensburg",
+
+    description: "UNESCO-Welterbe",
+
+    coords: [49.0134, 12.1016]
+
+  },
+
+  {
+
+    number: 10,
+
+    name: "Passau",
+
+    description: "Dreiflüssestadt",
+
+    coords: [48.5667, 13.4319]
+
+  },
+
+  {
+
+    number: 11,
+
+    name: "Schlögener Schlinge",
+
+    description: "Donau-Schleife im Eferdinger Becken",
+
+    coords: [48.4400, 13.9100]
+
+  },
+
+  {
+
+    number: 12,
+
+    name: "Wien",
+
+    description: "Ausschiffung & Kaiserstadt",
+
+    coords: [48.2082, 16.3738]
+
+  }
+
+];
+
+stops.forEach(function(stop) {
+
+  const icon = L.divIcon({
+
+    className: '',
+
+    html:
+
+      '<div class="number-marker">' +
+
+      stop.number +
+
+      '</div>',
+
+    iconSize: [34, 34],
+
+    iconAnchor: [17, 17]
 
   });
+
+  L.marker(stop.coords, { icon: icon })
+
+    .addTo(map)
+
+    .bindPopup(
+
+      '<div class="popup-title">' +
+
+      stop.number + '. ' + stop.name +
+
+      '</div>' +
+
+      '<div class="popup-subtitle">' +
+
+      stop.description +
+
+      '</div>'
+
+    );
+
+});
+
+const routeCoordinates = stops.map(function(stop) {
+
+  return stop.coords;
+
+});
+
+const route = L.polyline(
+
+  routeCoordinates,
+
+  {
+
+    color: '#176fbd',
+
+    weight: 4,
+
+    opacity: 0.8
+
+  }
+
+).addTo(map);
+
+map.fitBounds(route.getBounds(), {
+
+  padding: [40, 40]
+
+});
 
 </script>
 
