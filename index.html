@@ -717,6 +717,26 @@ stops.forEach(stop => {
 /* Reiseroute */
   
 
+// Reiseroute – weiße Kontur
+
+const routeOutline = L.polyline(
+
+    routeCoords,
+
+    {
+
+        color: "#ffffff",
+
+        weight: 13,
+
+        opacity: 0.9
+
+    }
+
+).addTo(map);
+
+// Reiseroute – rote Hauptlinie
+
 const route = L.polyline(
 
     routeCoords,
@@ -725,7 +745,7 @@ const route = L.polyline(
 
         color: "#e53935",
 
-        weight: 7,
+        weight: 8,
 
         opacity: 1
 
